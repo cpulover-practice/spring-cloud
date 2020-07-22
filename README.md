@@ -40,14 +40,15 @@
 
 6. Test the connection between Config Server and Config Git Repo:
    1. Run Java application for the Config Server
-   2. Access URL: ```localhost:<server_port>/<microservice_name>/<profile>
+   2. Access URL: ```localhost:<server_port>/<microservice_name>/<profile>```
 
 7. Connect Microservices to the Config Server
    1. Setup the Microservice
-      - Rename the application.properties (to prevent default properties file for the service) 
+      - Rename the application.properties to bootstrap.properties (to prevent local default properties file for the service) 
 [[bootstrap.application]()]
       - Remove application properties which is configured in the Config Git Repo
       - Declare URI of the Config Server: ```http://localhost:<server_port>```
+      - Declare the profile for the configuration (if not declare, default is picked up)
 8. Test the connection between Config Server and Microservice
    1. Run Java application for the Config Server
    2. Run Java application for the Microservice
@@ -55,8 +56,8 @@
 
 
 ### Notes - Tips
-- Need to commit the Config Git Repo for every change
-
+- For every change in the Config Git Repo, need to commit and restart the Config Server
+- ```bootstrap.properties``` used for Spring Cloud has higher priority than ```application.properties``` used in Spring Boot
 
 
 
