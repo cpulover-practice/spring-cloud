@@ -38,8 +38,8 @@
    2. Configure git URL in Server properties (use ```/``` instead of ```\```) 
 [[application.properties]()]
    3. Test the connection between Config Server and Config Git Repo:
-     1. Run Java application for the Config Server
-     2. Access URL: ```localhost:<server_port>/<microservice_name>/<profile>```
+      1. Run Java application for the Config Server
+      2. Access URL: ```localhost:<server_port>/<microservice_name>/<profile>```
 
 6. Connect Microservices to the Config Server
    1. Setup the Microservice
@@ -57,7 +57,17 @@
 ### Notes - Tips
 - For every change in the Config Git Repo, need to commit and restart the Config Server
 - ```bootstrap.properties``` used for Spring Cloud has higher priority than ```application.properties``` used in Spring Boot
-
+- [Spring Core] Inject properties for Microservices:
+  1. Declare application properties (for injection instead of hard-coding)  
+[[application.properties]()]
+  2. Create a Configuration class with @ConfigurationProperties and @Component (to read the properties) 
+[[Configuration]()] 
+     - Add prefix (?)
+     - Declare variables matching the needed properties
+     - Create setter and getter or use @Data
+  3. Inject the Configuration in Controllers using @Autowired (to get the properties in application.properties) 
+[[LimitsMicroserviceApplication]()]
+- [Spring Core] Prefer injecting properties by create a Configuration class to using @Value
 
 
 
