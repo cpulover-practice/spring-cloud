@@ -28,11 +28,12 @@
 
 4. Connect Config Server to Config Git Repo 
    1. Link to the Repo: ```Choose Config Server project -> Build Path  -> Source -> Link Source -> Choose Config Git folder```
-   2. Configure git URL in Server properties 
+   2. Configure git URL in Server properties (use ```/``` instead of ```\```) 
 [[application.properties]()]
 
 5. Create property file for microservices inside the Config Git Repo 
-[[limits-microservice.properties]()]
+[[limits-microservice.properties]()] [[limits-microservice-dev.properties]()] [[limits-microservice-qa.properties]()]
+   - File naming: ```<microservice_name>-profile.properties```
    - Commit the file
 
 6. Test the connection between Config Server and Config Git Repo:
@@ -41,7 +42,8 @@
 
 
 
-
+### Notes - Tips
+- Need to commit the Config Git Repo for every change
 
 
 
