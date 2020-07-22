@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
-@ConfigurationProperties("limits-service")
+@ConfigurationProperties("limits-microservice")
 @Component
 @Data
 public class Configuration {
