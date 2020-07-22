@@ -1,3 +1,5 @@
+# First Step
+
 1. Setup Microservice 
 [[limits-microservice]()]
    1. Spring Boot dependencies:
@@ -35,7 +37,7 @@
 
 5. Connect Config Server to Config Git Repo 
    1. Link to the Repo: ```Choose Config Server project -> Build Path  -> Source -> Link Source -> Choose Config Git folder```
-   2. Configure git URL in Server properties (use ```/``` instead of ```\```) 
+   2. Configure git URL (local or remote) in Server properties (use ```/``` instead of ```\```) 
 [[application.properties]()]
    3. Test the connection between Config Server and Config Git Repo:
       1. Run Java application for the Config Server
@@ -52,6 +54,23 @@
       1. Run Java application for the Config Server
       2. Run Java application for the Microservice
       3. Access the Microservice endpoints which exposes the property values
+
+---
+
+# More Microservices
+### Currency Exchange Microservice
+1. Setup Microservice 
+[[currency-exchange-microservice]()]
+   1. Spring Boot dependencies:
+      - Spring Web
+      - Spring Config Client
+      - Spring Boot DevTools
+      - Actuator
+      - Lombok
+   2. Configuration 
+[[application.properties]()]
+      - Application name
+      - Port
 
 
 ### Notes - Tips
