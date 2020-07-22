@@ -87,8 +87,13 @@
   3. Inject the Configuration in Controllers using @Autowired (to get the properties in application.properties) 
 [[LimitsMicroserviceApplication]()]
 - [Spring Core] Prefer injecting properties by create a Configuration class to using @Value
-
-
+- [Spring] Use @PostConstruct in the Controller to simulate in-memory database for protyping
+- [Spring Core] Retrieve application port by injecting Enviroment [springframework.core] 
+[[CurrencyExchangeMicroserviceApplication]()]
+- [Esclipse] Create multiple instances of Microservice on different ports (set port for application externally):
+  1. ```Choose service project -> Run As -> Run Configurations```
+  2. Duplicate the service configuration in Java application
+  3. Selet Arguments tag, for VM arguments: ```-Dserver.port=<port>```
 
 
 
