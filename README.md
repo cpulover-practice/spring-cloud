@@ -64,6 +64,8 @@
    1. Spring Boot dependencies:
       - Spring Web
       - Spring Config Client
+      - Spring Data JPA
+      - H2 Database
       - Spring Boot DevTools
       - Actuator
       - Lombok
@@ -71,6 +73,18 @@
 [[application.properties]()]
       - Application name
       - Port
+
+2. Setup Database stuffs 
+   - Entity 
+[[ExchangeValue]()]
+   - Data population 
+[[data.sql]()]
+   - JPA repository 
+[[ExchangeValueRepository]()]
+
+
+3. Create services 
+[[CurrencyExchangeMicroserviceRestController]()]
 
 
 ### Notes - Tips

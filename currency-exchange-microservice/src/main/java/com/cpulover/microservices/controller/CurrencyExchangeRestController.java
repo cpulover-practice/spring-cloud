@@ -13,15 +13,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cpulover.microservices.entity.ExchangeValue;
+import com.cpulover.microservices.repository.ExchangeValueRepository;
 
 @RestController
 public class CurrencyExchangeRestController {
+	
+	@Autowired
+	ExchangeValueRepository exchangeValueRepository;
 
 	@Autowired
 	private Environment environment; // to get the port
-	
-	//@Value("${local.server.port}")
-	//@LocalServerPort
+
+	// @Value("${local.server.port}")
+	// @LocalServerPort
 	private int port;
 
 	@PostConstruct // execute after injection
@@ -29,12 +33,14 @@ public class CurrencyExchangeRestController {
 		if (!(environment.getProperty("server.port") == null)) {
 			port = Integer.parseInt(environment.getProperty("server.port"));
 		}
-		System.out.println(port);
 	}
 
 	@GetMapping("/currency-exchange/from/{from}/to/{to}")
 	public ExchangeValue getExchangeValue(@PathVariable String from, @PathVariable String to) {
-		return new ExchangeValue(69L, from, to, BigDecimal.valueOf(6969), port);
+		ExchangeValue exchangeValue = exchangeValueRepository.findByFromAndTo(from, to);
+		exchangeValue.setPort(port);
+		return exchangeValue;
+
 	}
 
 }

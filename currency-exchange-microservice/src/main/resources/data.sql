@@ -1,0 +1,1 @@
+insert into exchange_value(id, currency_from, currency_to, conversion_multiple,port) values (1001, 'AAA', 'BBB',46,69), (1002, 'BBB', 'CCC',12,69), (1003, 'CCC', 'DDD',98,69);
