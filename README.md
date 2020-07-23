@@ -64,6 +64,7 @@
    1. Spring Boot dependencies:
       - Spring Web
       - Spring Config Client
+      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing 
       - Spring Data JPA
       - H2 Database
       - Spring Boot DevTools
@@ -137,14 +138,26 @@
          - Application name  
          - Port (typically 8761)
 2. Connect Eureka Server to Microservices
+   1. Configure Microservices
+      - Eureka Discovery Client dependency
+      - Register to the Server with @EnableDiscoveryClient 
+[[CurrencyConverterMicroserviceApplication]()] 
+[[CurrencyExchangeMicroserviceApplication]()]
+      - Configure Eureka Server URL in 
+[application.properties]()] 
+[application.properties]()]
+   2. Test the connection
+      - Run all the Microservices
+      - Run the Eureka Server
+      - Access URL: ```localhost:<eureka_server_port>```
 
 
       
 ---
 
 ### Notes - Tips
-- For every change in the Config Git Repo, need to commit and restart the Config Server
-- ```bootstrap.properties``` used for Spring Cloud has higher priority than ```application.properties``` used in Spring Boot
+- [Spring Cloud] For every change in the Config Git Repo, need to commit and restart the Config Server
+- [Spring] ```bootstrap.properties``` used for Spring Cloud has higher priority than ```application.properties``` used in Spring Boot
 - [Spring Core] Inject properties for Microservices:
   1. Declare application properties (for injection instead of hard-coding)  
 [[application.properties]()]
@@ -163,7 +176,8 @@
   1. ```Choose service project -> Run As -> Run Configurations```
   2. Duplicate the service configuration in Java application
   3. Selet Arguments tag, for VM arguments: ```-Dserver.port=<port>```
-
+- [Eureka] Eureka clients use ```jackson-dataformat-xml```. To enable JSON format, exclude xml dependency when adding Eureka Client dependency 
+[[pom.xml]()]
 
 
 
