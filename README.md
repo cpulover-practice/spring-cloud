@@ -90,6 +90,8 @@
 [[currency-converter-microservice]()]
    1. Spring Boot dependencies:
       - OpenFeign: leverage invoking REST API from other Microservices
+      - Ribbon [Maintenance]: client-side load-balancing
+      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing 
       - Spring Web
       - Spring Config Client
       - Spring Boot DevTools
@@ -104,17 +106,41 @@
 
 3. Create services
 [[CurrencyConversionRestController]()]
-     - Create a Rest Template to invoke service of the Currency Exchange {alternative: use OpenFeign - 4}
+     - Create a Rest Template to invoke service of the Currency Exchange {prefer alternative: OpenFeign - 4}
 4. OpenFeign
-   1. Enable OpenFeign with @EnableFeignCliens 
+   1. Enable OpenFeign with @EnableFeignClients 
 [[CurrencyConverterMicroserviceApplication]()]
    2. Create a Proxy interface for the Microservice from which need to invoke REST API
-      - @FeignClient with name and url of the Microservice
+      - @FeignClient with name and url {if connect to a single instance} of the Microservice
       - Declare method map to the desired API
    3. Inject the Proxy into the Rest Controller with @Autowired
 [[CurrencyConversionRestController]()]
-      
+5. Ribbon: connect to multiple instances of the Microservice, for load distribution
+   1. Enable Ribon with @RibbonClient in the Proxy 
+[[CurrencyExchangeServiceProxy]()]
+   2. Configure URLs of multiple instances in {prefer alternative: Name Server}
+[application.properties]()
 
+### Eureka Name Server
+1. Setup Server:
+   1. Spring Boot dependencies:
+      - Eureka Server
+      - Spring Config Client
+      - Spring Boot DevTools
+      - Actuator
+      - Lombok
+   2. Configuration 
+      1. Activate Server configuration with @EnableEurekaServer 
+[[EurekaNameServerApplication]()]
+      2. Configure in 
+[application.properties]()
+         - Application name  
+         - Port (typically 8761)
+2. Connect Eureka Server to Microservices
+
+
+      
+---
 
 ### Notes - Tips
 - For every change in the Config Git Repo, need to commit and restart the Config Server
