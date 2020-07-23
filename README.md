@@ -5,6 +5,8 @@
    1. Spring Boot dependencies:
       - Spring Web
       - Spring Config Client
+      - Spring Cloud Starter Bus AMQP: update changes from the Config Git Repo to multiple Microservices 
+[[URL](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp)]
       - Spring Boot DevTools
       - Actuator
       - Lombok
@@ -19,6 +21,8 @@
    1. Spring Boot dependencies:
       - Spring Config Server
       - Spring Boot DevTools
+      - Spring Cloud Starter Bus AMQP: update changes from the Config Git Repo to multiple Microservices 
+[[URL](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp)]
    2. Configuration 
 [[application.properties]()]
       - Application name
@@ -221,13 +225,25 @@
    - ```java -jar <zipkin_jar_file_name>```
 4. Access Zinkin UI via URL: ```http://localhost:9411/zipkin```
 
+### Spring Cloud Bus
+- Usage: update changes from the Config Git Repo to multiple Microservices
+1. Ensure RabbitMQ Server is running
+2. Spring Config Client and Spring Cloud Starter Bus AMQP dependencies for Config Server and Config Clients (Microservices)
+3. Enable Actuator endpoints in 
+[application.properties]()
+3. For updating the changes from Config Git Repo
+   - Commit the Git Repo
+   - ```POST localhost:<microservice_port>/actuator/bus-refresh``` (if there are many instances of a Microservices on different ports, choose any port)
 
 ---
 
 
 
 ### Notes - Tips
-- [Spring Cloud] For every change in the Config Git Repo, need to commit and restart the Config Server
+- [Spring Cloud] For every change in the Config Git Repo, to apply the change on Microservices, need to commit the Git Repo and: 
+  - Option 1: Restart the Microservices (or Config Server???) 
+  - Option 2: Use Actuator endpoint for each Microservice (or instance): ```POST localhost:<microservice_port>/actuator/refresh```
+  - Option 3: Use Spring Cloud Bus endpoint for all Microservices (or instances): ```POST localhost:<microservice_port>/actuator/bus-refresh``` (prefer for a large number of Microservices or instances)
 - [Spring] ```bootstrap.properties``` used for Spring Cloud has higher priority than ```application.properties``` used in Spring Boot
 - [Spring Core] Inject properties for Microservices:
   1. Declare application properties (for injection instead of hard-coding)  
@@ -250,7 +266,7 @@
 - [Eureka] Eureka clients use ```jackson-dataformat-xml```. To enable JSON format, exclude xml dependency when adding Eureka Client dependency 
 [[pom.xml]()]
 - [Spring Cloud] Order of application execution: Name Server -> Zipkin Server (CLI) -> Microservices -> Zuul API Gateway Server
-
+- [RabbitMQ] RabbitMQ Server runs as a service on background in Windows
 
 
 
