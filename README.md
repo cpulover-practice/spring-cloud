@@ -147,8 +147,8 @@
 [application.properties]()] 
 [application.properties]()]
    2. Test the connection
-      - Run all the Microservices
       - Run the Eureka Server
+      - Run all the Microservices
       - Access URL: ```localhost:<eureka_server_port>```
 
 ### Zuul API Gateway Server
@@ -169,7 +169,21 @@
         - Application name
         - Port
         - Eureka Server URL
-
+2. Create Filter class extends ZuulFilter with @Component 
+[[ZuulLoggingFilter]()]
+   - Implement abstract methods:
+     - ```filterOrder()```: priority when there are multiple Filters
+     - ```shouldFilter()```: excecute the filter for every request or not (invoke the ```run()```)
+     - ```run()```: core method of the filter handling bussiness logic
+     - ```filterType()```: when to execute the filter
+   - Get the current request using RequestContext
+   
+3. Test the Filter
+   - Run Eureka Server
+   - Run all Microservices
+   - Run Zuul Server
+   - Access URL: ```localhost:<zuul_server_port>/<microservice_name/<microservice_endpoint>```
+     - E.g: ```http://localhost:8000/currency-exchange/from/BBB/to/CCC``` => ```http://localhost:8765/currency-exchange-microservice/currency-exchange/from/BBB/to/CCC```
       
 ---
 
