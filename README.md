@@ -192,6 +192,14 @@
      - E.g: ```http://localhost:8000/currency-exchange/from/BBB/to/CCC``` => ```http://localhost:8765/currency-exchange-microservice/currency-exchange/from/BBB/to/CCC```
    - Access endpoints which invoke REST API from other Microservice through Zuul Gateway
 
+### Spring Cloud Sleuth
+- Description: add a unique ID to a request to trace it across multiple Microservices
+1. Sleuth dependency
+2. Create Sample Bean (brave.sampler) 
+[[ZuulApiGatewayServerApplication]()] 
+[[CurrencyConverterMicroserviceApplication]()] 
+[[CurrencyExchangeMicroserviceApplication]()] 
+   
 
 ---
 
@@ -220,6 +228,7 @@
   3. Selet Arguments tag, for VM arguments: ```-Dserver.port=<port>```
 - [Eureka] Eureka clients use ```jackson-dataformat-xml```. To enable JSON format, exclude xml dependency when adding Eureka Client dependency 
 [[pom.xml]()]
+- [Spring Cloud] Order of application execution: Name Server -> Microservices -> Zuul API Gateway Server
 
 
 

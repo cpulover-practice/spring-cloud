@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cpulover.microservices.entity.ExchangeValue;
 import com.cpulover.microservices.repository.ExchangeValueRepository;
 
+import lombok.extern.java.Log;
+
 @RestController
+@Log
 public class CurrencyExchangeRestController {
 	
 	@Autowired
@@ -39,6 +42,7 @@ public class CurrencyExchangeRestController {
 	public ExchangeValue getExchangeValue(@PathVariable String from, @PathVariable String to) {
 		ExchangeValue exchangeValue = exchangeValueRepository.findByFromAndTo(from, to);
 		exchangeValue.setPort(port);
+		log.info(exchangeValue.toString());
 		return exchangeValue;
 	}
 

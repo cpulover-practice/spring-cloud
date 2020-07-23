@@ -14,7 +14,10 @@ import org.springframework.web.client.RestTemplate;
 import com.cpulover.microservices.entity.CurrencyConversion;
 import com.cpulover.microservices.proxy.CurrencyExchangeServiceProxy;
 
+import lombok.extern.java.Log;
+
 @RestController
+@Log
 public class CurrencyConversionRestController {
 	@Autowired
 	private CurrencyExchangeServiceProxy currencyExchangeServiceProxy;
@@ -45,7 +48,7 @@ public class CurrencyConversionRestController {
 		CurrencyConversion currencyConversion = currencyExchangeServiceProxy.getExchangeValue(from, to);
 		currencyConversion.setQuantity(quantity);
 		currencyConversion.setTotalAmount(quantity.multiply(currencyConversion.getConversionMultiple()));
-		
+		log.info(currencyConversion.toString());
 		return currencyConversion;
 	}
 }
