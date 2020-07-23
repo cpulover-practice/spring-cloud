@@ -75,7 +75,7 @@
       - Port
 
 2. Setup Database stuffs 
-   - Entity 
+   - Entity response
 [[ExchangeValue]()]
    - Data population 
 [[data.sql]()]
@@ -98,7 +98,12 @@
 [[application.properties]()]
       - Application name
       - Port
-
+2. Create services
+   - Entity response 
+[[CurrencyConversion]()]
+   - Rest Controller 
+[[CurrencyConversionRestController]()]
+     - Create a Rest Template to invoke service of the Currency Exchange
 
 ### Notes - Tips
 - For every change in the Config Git Repo, need to commit and restart the Config Server
