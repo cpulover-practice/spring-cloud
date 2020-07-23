@@ -64,7 +64,10 @@
    1. Spring Boot dependencies:
       - Spring Web
       - Spring Config Client
-      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing 
+      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing
+      - Sleuth: distributed tracing via logs with Spring Cloud Sleuth
+      - Spring RabbitMQ Support 
+[[URL](https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit)]   
       - Spring Data JPA
       - H2 Database
       - Spring Boot DevTools
@@ -92,7 +95,10 @@
    1. Spring Boot dependencies:
       - OpenFeign: leverage invoking REST API from other Microservices
       - Ribbon: client-side load-balancing, used for the Microservices which invoking API from other Microservices
-      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing 
+      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing
+      - Sleuth: distributed tracing via logs with Spring Cloud Sleuth
+      - Spring RabbitMQ Support 
+[[URL](https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit)]   
       - Spring Web
       - Spring Config Client
       - Spring Boot DevTools
@@ -157,7 +163,10 @@
    1. Spring Boot dependencies:
       - Zuul
       - Eureka Discovery Client: connect to Euraka Name Server for loading balancing
-      - Sleuth: distributed tracing via logs with Spring Cloud Sleuth 
+      - Sleuth: distributed tracing via logs with Spring Cloud Sleuth
+      - Zipkin Client
+      - Spring RabbitMQ Support 
+[[URL](https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit)] 
       - Spring Boot DevTools
       - Actuator
       - Lombok
@@ -200,6 +209,18 @@
 [[CurrencyConverterMicroserviceApplication]()] 
 [[CurrencyExchangeMicroserviceApplication]()] 
    
+### Zipkin Distributed Tracing Server
+- Description: store all tracing requests (by Sleuth) in one place
+1. Setup enviroment
+   1. Install Erlang and RabbitMQ: message queue supporting asynchronous communication for Zipkin to pick up
+   2. Get Zipkin server jar file
+
+2. Connect Microservices to RabbitMQ and Zipkin: add Zipkin Client and Spring RabbitMQ Support dependencies
+3. Run the Zinkin server by CLI
+   - ```set RABBIT_URI=amqp://localhost```: connect Zipkin to RabbitMQ Server
+   - ```java -jar <zipkin_jar_file_name>```
+4. Access Zinkin UI via URL: ```http://localhost:9411/zipkin```
+
 
 ---
 
@@ -228,7 +249,7 @@
   3. Selet Arguments tag, for VM arguments: ```-Dserver.port=<port>```
 - [Eureka] Eureka clients use ```jackson-dataformat-xml```. To enable JSON format, exclude xml dependency when adding Eureka Client dependency 
 [[pom.xml]()]
-- [Spring Cloud] Order of application execution: Name Server -> Microservices -> Zuul API Gateway Server
+- [Spring Cloud] Order of application execution: Name Server -> Zipkin Server (CLI) -> Microservices -> Zuul API Gateway Server
 
 
 
