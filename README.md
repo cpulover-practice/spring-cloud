@@ -156,7 +156,8 @@
 [[zuul-api-gateway-server]()]
    1. Spring Boot dependencies:
       - Zuul
-      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing 
+      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing
+      - Sleuth: distributed tracing via logs with Spring Cloud Sleuth 
       - Spring Boot DevTools
       - Actuator
       - Lombok
@@ -177,15 +178,24 @@
      - ```run()```: core method of the filter handling bussiness logic
      - ```filterType()```: when to execute the filter
    - Get the current request using RequestContext
+
+3. Setup Zuul API Gateway between Microservices: update Feign Proxy interface 
+[[CurrencyExchangeServiceProxy]()]
+   - Connect to the Zuul Gateway by @FeignClient instead to other Microservice
+   - Update the endpoint mapping of Zuul Gateway: append the Microsevice name (which has the REST API) at the beginning
    
-3. Test the Filter
+4. Test the Filter
    - Run Eureka Server
    - Run all Microservices
    - Run Zuul Server
-   - Access URL: ```localhost:<zuul_server_port>/<microservice_name/<microservice_endpoint>```
+   - Access Zuul Gateway URL directly: ```localhost:<zuul_server_port>/<microservice_name/<microservice_endpoint>```
      - E.g: ```http://localhost:8000/currency-exchange/from/BBB/to/CCC``` => ```http://localhost:8765/currency-exchange-microservice/currency-exchange/from/BBB/to/CCC```
-      
+   - Access endpoints which invoke REST API from other Microservice through Zuul Gateway
+
+
 ---
+
+
 
 ### Notes - Tips
 - [Spring Cloud] For every change in the Config Git Repo, need to commit and restart the Config Server
