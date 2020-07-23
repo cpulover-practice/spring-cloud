@@ -40,7 +40,6 @@ public class CurrencyExchangeRestController {
 		ExchangeValue exchangeValue = exchangeValueRepository.findByFromAndTo(from, to);
 		exchangeValue.setPort(port);
 		return exchangeValue;
-
 	}
 
 }

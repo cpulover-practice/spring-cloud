@@ -89,6 +89,7 @@
 1. Setup Microservice 
 [[currency-converter-microservice]()]
    1. Spring Boot dependencies:
+      - OpenFeign: leverage invoking REST API from other Microservices
       - Spring Web
       - Spring Config Client
       - Spring Boot DevTools
@@ -98,12 +99,22 @@
 [[application.properties]()]
       - Application name
       - Port
-2. Create services
-   - Entity response 
+2. Create Entity response 
 [[CurrencyConversion]()]
-   - Rest Controller 
+
+3. Create services
 [[CurrencyConversionRestController]()]
-     - Create a Rest Template to invoke service of the Currency Exchange
+     - Create a Rest Template to invoke service of the Currency Exchange {alternative: use OpenFeign - 4}
+4. OpenFeign
+   1. Enable OpenFeign with @EnableFeignCliens 
+[[CurrencyConverterMicroserviceApplication]()]
+   2. Create a Proxy interface for the Microservice from which need to invoke REST API
+      - @FeignClient with name and url of the Microservice
+      - Declare method map to the desired API
+   3. Inject the Proxy into the Rest Controller with @Autowired
+[[CurrencyConversionRestController]()]
+      
+
 
 ### Notes - Tips
 - For every change in the Config Git Repo, need to commit and restart the Config Server
