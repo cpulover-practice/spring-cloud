@@ -91,7 +91,7 @@
 [[currency-converter-microservice]()]
    1. Spring Boot dependencies:
       - OpenFeign: leverage invoking REST API from other Microservices
-      - Ribbon [Maintenance]: client-side load-balancing
+      - Ribbon: client-side load-balancing, used for the Microservices which invoking API from other Microservices
       - Eureka Discovery Client: connect to Euraka Name Server for loading balancing 
       - Spring Web
       - Spring Config Client
@@ -104,7 +104,6 @@
       - Port
 2. Create Entity response 
 [[CurrencyConversion]()]
-
 3. Create services
 [[CurrencyConversionRestController]()]
      - Create a Rest Template to invoke service of the Currency Exchange {prefer alternative: OpenFeign - 4}
@@ -123,7 +122,8 @@
 [application.properties]()
 
 ### Eureka Name Server
-1. Setup Server:
+1. Setup Server 
+[[eureka-name-server]()]
    1. Spring Boot dependencies:
       - Eureka Server
       - Spring Config Client
@@ -151,6 +151,24 @@
       - Run the Eureka Server
       - Access URL: ```localhost:<eureka_server_port>```
 
+### Zuul API Gateway Server
+1. Setup Server 
+[[zuul-api-gateway-server]()]
+   1. Spring Boot dependencies:
+      - Zuul
+      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing 
+      - Spring Boot DevTools
+      - Actuator
+      - Lombok
+   2. Configuration 
+      - Enable Zuul Proxy with @EnableZuulProxy 
+      - Register to Eureka Server with @EnableDiscoveryClient
+[[ZuulApiGatewayServerApplication]()]
+      - Configure in 
+[[application.properties]()]
+        - Application name
+        - Port
+        - Eureka Server URL
 
       
 ---
