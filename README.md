@@ -81,10 +81,23 @@
 [[data.sql]()]
    - JPA repository 
 [[ExchangeValueRepository]()]
-
-
 3. Create services 
 [[CurrencyExchangeMicroserviceRestController]()]
+
+
+### Currency Converter Microservice
+1. Setup Microservice 
+[[currency-converter-microservice]()]
+   1. Spring Boot dependencies:
+      - Spring Web
+      - Spring Config Client
+      - Spring Boot DevTools
+      - Actuator
+      - Lombok
+   2. Configuration 
+[[application.properties]()]
+      - Application name
+      - Port
 
 
 ### Notes - Tips
