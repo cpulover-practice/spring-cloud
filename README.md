@@ -7,6 +7,7 @@
       - Spring Config Client
       - Spring Cloud Starter Bus AMQP: update changes from the Config Git Repo to multiple Microservices 
 [[URL](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp)]
+      - Hystrix: fault tolerance
       - Spring Boot DevTools
       - Actuator
       - Lombok
@@ -235,9 +236,17 @@
    - Commit the Git Repo
    - ```POST localhost:<microservice_port>/actuator/bus-refresh``` (if there are many instances of a Microservices on different ports, choose any port)
 
+### Hystrix
+- Usage: fault tolerance (return a default response when the Microservice is not available)
+- Hystrix dependency
+- Enable Hystrix with @EnableHystrix 
+[[LimitsMicroserviceApplication]()]
+- Update the Rest Controller 
+[[LimitConfigRestController]()]
+  - Specify a fallback method for an endpoint with @HystrixCommand
+  - Define the fallback method
+
 ---
-
-
 
 ### Notes - Tips
 - [Spring Cloud] For every change in the Config Git Repo, to apply the change on Microservices, need to commit the Git Repo and: 
