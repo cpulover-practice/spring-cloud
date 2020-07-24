@@ -1,83 +1,60 @@
-# First Step
+# Overview
+__*Currency Converter Microservice*__ provides REST service converting a currency into another currency. It invokes services from __*Currency Exchange Microservice*__ and __*Limits Microservice*__ to retrieve respectively the exchange rate and the limit amount (minimum and maximum) for each exchange.
+- __*Spring Cloud Config Server:*__ contains configurations of all the Microservice. It connects to a Config Git Repository as a storage.
+- __*OpenFeign:*__ leverages invoking REST API from other Microservices
+- __*Ribbon:*__ client-side load-balancing, used for the Microservices which invoking API from mulitple instances of other Microservice
+- __*Eureka Name Server:*__ registers and manages all the instances of Microservice
+- __*Zuul API Gateway Server:*__ logs out all the requests made between Microservices
+- __*Spring Cloud Sleuth:*__ adds a unique ID to a request to trace it across multiple Microservices
+- __*Zipkin Distributed Tracing Server:*__ stores all tracing requests (by Sleuth) in one place
+- __*Spring Cloud Bus:*__ updates (broadcasts) changes from the Config Git Repo of the Spring Cloud Config Server to multiple Microservices at the same time
+- __*Hystrix:*__ provides fault tolerance (return a default response when the Microservice is not available)
 
+### Dependencies
+- Spring Config Client/Server
+- OpenFeign
+- Ribbon
+- Spring Cloud Starter Bus AMQP: for Spring Cloud Bus 
+[[URL](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp)]
+- Hystrix
+- Zuul
+- Eureka Discovery Client: connect to Euraka Name Server for loading balancing
+- Sleuth: distributed tracing via logs with Spring Cloud Sleuth
+- Spring RabbitMQ Support: used as a message queue supporting for Zipkin Distributed Tracing Server
+[[URL](https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit)]   
+
+
+# Development Process
+
+## Microservices
+
+### Limits Microservice
 1. Setup Microservice 
 [[limits-microservice]()]
    1. Spring Boot dependencies:
       - Spring Web
       - Spring Config Client
-      - Spring Cloud Starter Bus AMQP: update changes from the Config Git Repo to multiple Microservices 
-[[URL](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp)]
-      - Hystrix: fault tolerance
-      - Spring Boot DevTools
-      - Actuator
-      - Lombok
+      - Spring Cloud Starter Bus AMQP
+      - Hystrix
+      - Assistant dependencies: Spring Boot DevTools, Actuator, Lombok
    2. Configuration 
 [[application.properties]()]
       - Application name
       - Port
       - Other properties
-
-2. Setup Spring Cloud Config Server 
-[[spring-cloud-config-server]()]
-   1. Spring Boot dependencies:
-      - Spring Config Server
-      - Spring Boot DevTools
-      - Spring Cloud Starter Bus AMQP: update changes from the Config Git Repo to multiple Microservices 
-[[URL](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp)]
-   2. Configuration 
-[[application.properties]()]
-      - Application name
-      - Port
-      - Other properties
-   3. Enable Spring Cloud Config Server with @EnableConfigServer 
-[[SpringCloudConfigServerApplication]()]
-
-3. Create git repository to store configurations of microservices 
-[[config-git-repo]()]
-
-4. Create property file for Microservices inside the Config Git Repo 
-[[limits-microservice.properties]()] [[limits-microservice-dev.properties]()] [[limits-microservice-qa.properties]()]
-   - File naming: ```<microservice_name>-<profile>.properties``` (<```microservice_name>``` must match to the application name of the service configured in the servicer properties file)
-   - Commit the files
-
-5. Connect Config Server to Config Git Repo 
-   1. Link to the Repo: ```Choose Config Server project -> Build Path  -> Source -> Link Source -> Choose Config Git folder```
-   2. Configure git URL (local or remote) in Server properties (use ```/``` instead of ```\```) 
-[[application.properties]()]
-   3. Test the connection between Config Server and Config Git Repo:
-      1. Run Java application for the Config Server
-      2. Access URL: ```localhost:<server_port>/<microservice_name>/<profile>```
-
-6. Connect Microservices to the Config Server
-   1. Setup the Microservice
-      - Rename the application.properties to bootstrap.properties (to prevent local default properties file for the service) 
-[[bootstrap.application]()]
-      - Remove application properties which is configured in the Config Git Repo
-      - Declare URI of the Config Server: ```http://localhost:<server_port>```
-      - Declare the profile for the configuration (if not declare, default is picked up)
-   2. Test the connection between Config Server and Microservice
-      1. Run Java application for the Config Server
-      2. Run Java application for the Microservice
-      3. Access the Microservice endpoints which exposes the property values
-
----
-
-# More Microservices
+      
 ### Currency Exchange Microservice
 1. Setup Microservice 
 [[currency-exchange-microservice]()]
    1. Spring Boot dependencies:
       - Spring Web
       - Spring Config Client
-      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing
-      - Sleuth: distributed tracing via logs with Spring Cloud Sleuth
+      - Eureka Discovery Client
+      - Sleuth
       - Spring RabbitMQ Support 
-[[URL](https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit)]   
       - Spring Data JPA
       - H2 Database
-      - Spring Boot DevTools
-      - Actuator
-      - Lombok
+      - Assistant dependencies: Spring Boot DevTools, Actuator, Lombok
    2. Configuration 
 [[application.properties]()]
       - Application name
@@ -98,17 +75,14 @@
 1. Setup Microservice 
 [[currency-converter-microservice]()]
    1. Spring Boot dependencies:
-      - OpenFeign: leverage invoking REST API from other Microservices
-      - Ribbon: client-side load-balancing, used for the Microservices which invoking API from other Microservices
-      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing
+      - OpenFeign
+      - Ribbon
+      - Eureka Discovery Client
       - Sleuth: distributed tracing via logs with Spring Cloud Sleuth
       - Spring RabbitMQ Support 
-[[URL](https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit)]   
       - Spring Web
       - Spring Config Client
-      - Spring Boot DevTools
-      - Actuator
-      - Lombok
+      - Assistant dependencies: Spring Boot DevTools, Actuator, Lombok
    2. Configuration 
 [[application.properties]()]
       - Application name
@@ -117,17 +91,66 @@
 [[CurrencyConversion]()]
 3. Create services
 [[CurrencyConversionRestController]()]
-     - Create a Rest Template to invoke service of the Currency Exchange {prefer alternative: OpenFeign - 4}
-4. OpenFeign
-   1. Enable OpenFeign with @EnableFeignClients 
+     - Create a Rest Template to invoke service of the Currency Exchange {prefer alternative: OpenFeign}
+
+## Other Cloud Components
+
+### Spring Cloud Config Server
+1. Setup Spring Cloud Config Server 
+[[spring-cloud-config-server]()]
+   1. Spring Boot dependencies:
+      - Spring Config Server
+      - Spring Boot DevTools
+      - Spring Cloud Starter Bus AMQP
+   2. Configuration 
+[[application.properties]()]
+      - Application name
+      - Port
+   3. Enable Spring Cloud Config Server with __*@EnableConfigServer*__  
+[[SpringCloudConfigServerApplication]()]
+
+2. Create git repository to store configurations of microservices 
+[[config-git-repo]()]
+
+3. Create property file for Microservices inside the Config Git Repo 
+[[limits-microservice.properties]()] 
+[[limits-microservice-dev.properties]()] 
+[[limits-microservice-qa.properties]()]
+   - File naming: ```<microservice_name>-<profile>.properties``` (<```microservice_name>``` must match to the application name of the service configured in the servicer properties file)
+   - Commit the files
+
+4. Connect Config Server to Config Git Repo 
+   1. Link to the Repo: ```Choose Config Server project -> Build Path  -> Source -> Link Source -> Choose Config Git folder```
+   2. Configure git URL (local or remote) in Server properties (use ```/``` instead of ```\```) 
+[[application.properties]()]
+   3. Test the connection between Config Server and Config Git Repo:
+      1. Run Java application for the Config Server
+      2. Access URL: ```localhost:<server_port>/<microservice_name>/<profile>```
+
+5. Connect Microservices to the Config Server
+   1. Setup the Microservice
+      - Rename the application.properties to bootstrap.properties (to prevent local default properties file for the service) 
+[[bootstrap.application]()]
+      - Remove application properties which is configured in the Config Git Repo
+      - Declare URI of the Config Server: ```http://localhost:<server_port>```
+      - Declare the profile for the configuration (if not declare, default is picked up)
+   2. Test the connection between Config Server and Microservice
+      1. Run Java application for the Config Server
+      2. Run Java application for the Microservices
+      3. Access Microservice endpoints which exposes the property values
+
+
+### OpenFein & Ribbon
+1. OpenFeign
+   1. Enable OpenFeign with __*@EnableFeignClients*__  
 [[CurrencyConverterMicroserviceApplication]()]
    2. Create a Proxy interface for the Microservice from which need to invoke REST API
-      - @FeignClient with name and url {if connect to a single instance} of the Microservice
+      - __*@FeignClient*__  with name and url {if connect to a single instance} of the Microservice
       - Declare method map to the desired API
-   3. Inject the Proxy into the Rest Controller with @Autowired
+   3. Inject the Proxy into the Rest Controller with __*@Autowired*__ 
 [[CurrencyConversionRestController]()]
-5. Ribbon: connect to multiple instances of the Microservice, for load distribution
-   1. Enable Ribon with @RibbonClient in the Proxy 
+2. Ribbon
+   1. Enable Ribon with __*@RibbonClient in the Proxy*__  
 [[CurrencyExchangeServiceProxy]()]
    2. Configure URLs of multiple instances in {prefer alternative: Name Server}
 [application.properties]()
@@ -138,11 +161,9 @@
    1. Spring Boot dependencies:
       - Eureka Server
       - Spring Config Client
-      - Spring Boot DevTools
-      - Actuator
-      - Lombok
+      - Assistant dependencies: Spring Boot DevTools, Actuator, Lombok
    2. Configuration 
-      1. Activate Server configuration with @EnableEurekaServer 
+      1. Activate Server configuration with __*@EnableEurekaServer*__ 
 [[EurekaNameServerApplication]()]
       2. Configure in 
 [application.properties]()
@@ -167,24 +188,21 @@
 [[zuul-api-gateway-server]()]
    1. Spring Boot dependencies:
       - Zuul
-      - Eureka Discovery Client: connect to Euraka Name Server for loading balancing
-      - Sleuth: distributed tracing via logs with Spring Cloud Sleuth
+      - Eureka Discovery Client
+      - Sleuth
       - Zipkin Client
       - Spring RabbitMQ Support 
-[[URL](https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit)] 
-      - Spring Boot DevTools
-      - Actuator
-      - Lombok
+      - Assistant dependencies: Spring Boot DevTools, Actuator, Lombok
    2. Configuration 
-      - Enable Zuul Proxy with @EnableZuulProxy 
-      - Register to Eureka Server with @EnableDiscoveryClient
+      - Enable Zuul Proxy with __*@EnableZuulProxy*__
+      - Register to Eureka Server with __*@EnableDiscoveryClient*__ 
 [[ZuulApiGatewayServerApplication]()]
       - Configure in 
 [[application.properties]()]
         - Application name
         - Port
         - Eureka Server URL
-2. Create Filter class extends ZuulFilter with @Component 
+2. Create Filter class extends ZuulFilter with __*@Component*__ 
 [[ZuulLoggingFilter]()]
    - Implement abstract methods:
      - ```filterOrder()```: priority when there are multiple Filters
@@ -195,7 +213,7 @@
 
 3. Setup Zuul API Gateway between Microservices: update Feign Proxy interface 
 [[CurrencyExchangeServiceProxy]()]
-   - Connect to the Zuul Gateway by @FeignClient instead to other Microservice
+   - Connect to the Zuul Gateway by __*@FeignClient*__ instead to other Microservice
    - Update the endpoint mapping of Zuul Gateway: append the Microsevice name (which has the REST API) at the beginning
    
 4. Test the Filter
@@ -207,7 +225,6 @@
    - Access endpoints which invoke REST API from other Microservice through Zuul Gateway
 
 ### Spring Cloud Sleuth
-- Description: add a unique ID to a request to trace it across multiple Microservices
 1. Sleuth dependency
 2. Create Sample Bean (brave.sampler) 
 [[ZuulApiGatewayServerApplication]()] 
@@ -215,7 +232,6 @@
 [[CurrencyExchangeMicroserviceApplication]()] 
    
 ### Zipkin Distributed Tracing Server
-- Description: store all tracing requests (by Sleuth) in one place
 1. Setup enviroment
    1. Install Erlang and RabbitMQ: message queue supporting asynchronous communication for Zipkin to pick up
    2. Get Zipkin server jar file
@@ -227,7 +243,6 @@
 4. Access Zinkin UI via URL: ```http://localhost:9411/zipkin```
 
 ### Spring Cloud Bus
-- Usage: update changes from the Config Git Repo to multiple Microservices
 1. Ensure RabbitMQ Server is running
 2. Spring Config Client and Spring Cloud Starter Bus AMQP dependencies for Config Server and Config Clients (Microservices)
 3. Enable Actuator endpoints in 
@@ -237,13 +252,12 @@
    - ```POST localhost:<microservice_port>/actuator/bus-refresh``` (if there are many instances of a Microservices on different ports, choose any port)
 
 ### Hystrix
-- Usage: fault tolerance (return a default response when the Microservice is not available)
-- Hystrix dependency
-- Enable Hystrix with @EnableHystrix 
+1. Hystrix dependency
+2. Enable Hystrix with __*@EnableHystrix*__  
 [[LimitsMicroserviceApplication]()]
-- Update the Rest Controller 
+3. Update the Rest Controller 
 [[LimitConfigRestController]()]
-  - Specify a fallback method for an endpoint with @HystrixCommand
+  - Specify a fallback method for an endpoint with __*@HystrixCommand*__ 
   - Define the fallback method
 
 ---
@@ -257,15 +271,15 @@
 - [Spring Core] Inject properties for Microservices:
   1. Declare application properties (for injection instead of hard-coding)  
 [[application.properties]()]
-  2. Create a Configuration class with @ConfigurationProperties and @Component (to read the properties) 
+  2. Create a Configuration class with __*@ConfigurationProperties*__ and __*@Component*__ (to read the properties) 
 [[Configuration]()] 
      - Add prefix (?)
      - Declare variables matching the needed properties
-     - Create setter and getter or use @Data
-  3. Inject the Configuration in Controllers using @Autowired (to get the properties in application.properties) 
+     - Create setter and getter or use __*@Data*__
+  3. Inject the Configuration in Controllers using __*@Autowired*__ (to get the properties in application.properties) 
 [[LimitsMicroserviceApplication]()]
 - [Spring Core] Prefer injecting properties by create a Configuration class to using @Value
-- [Spring] Use @PostConstruct in the Controller to simulate in-memory database for protyping
+- [Spring] Use __*@PostConstruct*__ in the Controller to simulate in-memory database for protyping
 - [Spring Core] Retrieve application port by injecting Enviroment [springframework.core] 
 [[CurrencyExchangeMicroserviceApplication]()]
 - [Esclipse] Create multiple instances of Microservice on different ports (set port for application externally):
