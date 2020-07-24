@@ -1,33 +1,39 @@
 # Overview
-__*Currency Converter Microservice*__ provides REST service converting a currency into another currency. It invokes services from __*Currency Exchange Microservice*__ and __*Limits Microservice*__ to retrieve respectively the exchange rate and the limit amount (minimum and maximum) for each exchange.
-- __*Spring Cloud Config Server:*__ contains configurations of all the Microservice. It connects to a Config Git Repository as a storage.
-- __*OpenFeign:*__ leverages invoking REST API from other Microservices
-- __*Ribbon:*__ client-side load-balancing, used for the Microservices which invoking API from mulitple instances of other Microservice
-- __*Eureka Name Server:*__ registers and manages all the instances of Microservice
-- __*Zuul API Gateway Server:*__ logs out all the requests made between Microservices
-- __*Spring Cloud Sleuth:*__ adds a unique ID to a request to trace it across multiple Microservices
-- __*Zipkin Distributed Tracing Server:*__ stores all tracing requests (by Sleuth) in one place
-- __*Spring Cloud Bus:*__ updates (broadcasts) changes from the Config Git Repo of the Spring Cloud Config Server to multiple Microservices at the same time
-- __*Hystrix:*__ provides fault tolerance (return a default response when the Microservice is not available)
+### Microservices
+[__*Currency Converter Microservice*__](#currency-converter-microservice) provides REST service converting a currency into another currency. It invokes services from [__*Currency Exchange Microservice*__](#currency-exchange-microservice) and [__*Limits Microservice*__](#limits-microservice) to retrieve respectively the exchange rate and the limit amount (minimum and maximum) for each exchange.  
+  
+### Cloud Servers
+- [__*Spring Cloud Config Server:*__](#spring-cloud-config-server) contains configurations of all the Microservice. It connects to a Config Git Repository as a storage.
+- [__*Eureka Name Server:*__](#eureka-name-server) registers and manages all the instances of Microservice
+- [__*Zuul API Gateway Server:*__](#zuul-api-gateway-server) logs out all the requests made between Microservices
+- [__*Zipkin Distributed Tracing Server:*__](#zipkin-distributed-tracing-server) stores all tracing requests (by Sleuth) in one place
+
+### Other Cloud components
+- [__*OpenFeign:*__](#openfeign) leverages invoking REST API from other Microservices
+- [__*Ribbon:*__](#ribbon) client-side load-balancing, used for the Microservices which invoking API from mulitple instances of other Microservice
+- [__*Spring Cloud Sleuth:*__](#spring-cloud-sleuth) adds a unique ID to a request to trace it across multiple Microservices
+- [__*Spring Cloud Bus:*__](#spring-cloud-bus) updates (broadcasts) changes from the Config Git Repo of the Spring Cloud Config Server to multiple Microservices at the same time
+- [__*Hystrix:*__](#hystrix) provides fault tolerance (return a default response when the Microservice is not available)
 
 ### Dependencies
 - Spring Config Client/Server
 - OpenFeign
 - Ribbon
+- Eureka Server
+- Eureka Discovery Client: connect to Euraka Name Server for loading balancing
+- Zuul
+- Spring RabbitMQ Support: used as a message queue supporting for Zipkin Distributed Tracing Server
+- Sleuth: distributed tracing via logs with Spring Cloud Sleuth
+[[URL](https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit)]   
 - Spring Cloud Starter Bus AMQP: for Spring Cloud Bus 
 [[URL](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp)]
 - Hystrix
-- Zuul
-- Eureka Discovery Client: connect to Euraka Name Server for loading balancing
-- Sleuth: distributed tracing via logs with Spring Cloud Sleuth
-- Spring RabbitMQ Support: used as a message queue supporting for Zipkin Distributed Tracing Server
-[[URL](https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit)]   
 
+---
 
 # Development Process
 
 ## Microservices
-
 ### Limits Microservice
 1. Setup Microservice 
 [[limits-microservice]()]
@@ -92,9 +98,8 @@ __*Currency Converter Microservice*__ provides REST service converting a currenc
 3. Create services
 [[CurrencyConversionRestController]()]
      - Create a Rest Template to invoke service of the Currency Exchange {prefer alternative: OpenFeign}
-
-## Other Cloud Components
-
+     
+## Cloud Servers
 ### Spring Cloud Config Server
 1. Setup Spring Cloud Config Server 
 [[spring-cloud-config-server]()]
@@ -138,23 +143,6 @@ __*Currency Converter Microservice*__ provides REST service converting a currenc
       1. Run Java application for the Config Server
       2. Run Java application for the Microservices
       3. Access Microservice endpoints which exposes the property values
-
-
-### OpenFein & Ribbon
-1. OpenFeign
-   1. Enable OpenFeign with __*@EnableFeignClients*__  
-[[CurrencyConverterMicroserviceApplication]()]
-   2. Create a Proxy interface for the Microservice from which need to invoke REST API
-      - __*@FeignClient*__  with name and url {if connect to a single instance} of the Microservice
-      - Declare method map to the desired API
-   3. Inject the Proxy into the Rest Controller with __*@Autowired*__ 
-[[CurrencyConversionRestController]()]
-2. Ribbon
-   1. Enable Ribon with __*@RibbonClient in the Proxy*__  
-[[CurrencyExchangeServiceProxy]()]
-   2. Configure URLs of multiple instances in {prefer alternative: Name Server}
-[application.properties]()
-
 ### Eureka Name Server
 1. Setup Server 
 [[eureka-name-server]()]
@@ -171,8 +159,8 @@ __*Currency Converter Microservice*__ provides REST service converting a currenc
          - Port (typically 8761)
 2. Connect Eureka Server to Microservices
    1. Configure Microservices
-      - Eureka Discovery Client dependency
-      - Register to the Server with @EnableDiscoveryClient 
+      - Add Eureka Discovery Client dependency
+      - Register to the Server with __*@EnableDiscoveryClient*__ 
 [[CurrencyConverterMicroserviceApplication]()] 
 [[CurrencyExchangeMicroserviceApplication]()]
       - Configure Eureka Server URL in 
@@ -223,13 +211,6 @@ __*Currency Converter Microservice*__ provides REST service converting a currenc
    - Access Zuul Gateway URL directly: ```localhost:<zuul_server_port>/<microservice_name/<microservice_endpoint>```
      - E.g: ```http://localhost:8000/currency-exchange/from/BBB/to/CCC``` => ```http://localhost:8765/currency-exchange-microservice/currency-exchange/from/BBB/to/CCC```
    - Access endpoints which invoke REST API from other Microservice through Zuul Gateway
-
-### Spring Cloud Sleuth
-1. Sleuth dependency
-2. Create Sample Bean (brave.sampler) 
-[[ZuulApiGatewayServerApplication]()] 
-[[CurrencyConverterMicroserviceApplication]()] 
-[[CurrencyExchangeMicroserviceApplication]()] 
    
 ### Zipkin Distributed Tracing Server
 1. Setup enviroment
@@ -242,6 +223,33 @@ __*Currency Converter Microservice*__ provides REST service converting a currenc
    - ```java -jar <zipkin_jar_file_name>```
 4. Access Zinkin UI via URL: ```http://localhost:9411/zipkin```
 
+
+
+## Other Cloud Components
+### OpenFeign
+1. Add OpenFeign dependency
+2. Enable OpenFeign with __*@EnableFeignClients*__  
+[[CurrencyConverterMicroserviceApplication]()]
+3. Create a Proxy interface for the Microservice from which need to invoke REST API
+   - __*@FeignClient*__  with name and url {if connect to a single instance} of the Microservice
+   - Declare method map to the desired API
+4. Inject the Proxy into the Rest Controller with __*@Autowired*__ 
+[[CurrencyConversionRestController]()]
+
+### Ribbon
+1. Add Ribbon dependency
+2. Enable Ribbon with __*@RibbonClient*__ in the Proxy  
+[[CurrencyExchangeServiceProxy]()]
+3. Configure URLs of multiple instances in {prefer alternative: Name Server}
+[application.properties]()
+
+### Spring Cloud Sleuth
+1. Add Sleuth dependency
+2. Create Sample Bean (brave.sampler) 
+[[ZuulApiGatewayServerApplication]()] 
+[[CurrencyConverterMicroserviceApplication]()] 
+[[CurrencyExchangeMicroserviceApplication]()] 
+   
 ### Spring Cloud Bus
 1. Ensure RabbitMQ Server is running
 2. Spring Config Client and Spring Cloud Starter Bus AMQP dependencies for Config Server and Config Clients (Microservices)
@@ -252,17 +260,17 @@ __*Currency Converter Microservice*__ provides REST service converting a currenc
    - ```POST localhost:<microservice_port>/actuator/bus-refresh``` (if there are many instances of a Microservices on different ports, choose any port)
 
 ### Hystrix
-1. Hystrix dependency
+1. Add Hystrix dependency
 2. Enable Hystrix with __*@EnableHystrix*__  
 [[LimitsMicroserviceApplication]()]
 3. Update the Rest Controller 
 [[LimitConfigRestController]()]
-  - Specify a fallback method for an endpoint with __*@HystrixCommand*__ 
-  - Define the fallback method
+   - Specify a fallback method for an endpoint with __*@HystrixCommand*__ 
+   - Define the fallback method
 
 ---
 
-### Notes - Tips
+# Notes - Tips
 - [Spring Cloud] For every change in the Config Git Repo, to apply the change on Microservices, need to commit the Git Repo and: 
   - Option 1: Restart the Microservices (or Config Server???) 
   - Option 2: Use Actuator endpoint for each Microservice (or instance): ```POST localhost:<microservice_port>/actuator/refresh```
