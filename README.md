@@ -196,7 +196,7 @@
 3. Setup Zuul API Gateway between Microservices: update Feign Proxy interface 
 [[CurrencyExchangeServiceProxy](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/proxy/CurrencyExchangeServiceProxy.java)]
    - Connect to the Zuul Gateway by __*@FeignClient*__ instead to other Microservice
-   - Update the endpoint mapping of Zuul Gateway: append the Microsevice name (which has the REST API) at the beginning
+   - Update the endpoint mapping of Zuul Gateway: append the Microsevice name (which owns the invoked REST API) at the beginning
    
 4. Test the Filter
    - Run Eureka Server -> Microservices -> Zuul Server
@@ -208,7 +208,7 @@
 1. Setup enviroment
    1. Install Erlang and RabbitMQ: message queue supporting asynchronous communication for Zipkin to pick up
    2. Get Zipkin server jar file 
-   [[URL](https://github.com/cpulover-practice/spring-cloud/blob/master/zipkin-server-2.12.9-exec.jar)
+   [[URL](https://github.com/cpulover-practice/spring-cloud/blob/master/zipkin-server-2.12.9-exec.jar)]
 
 2. Connect Microservices to RabbitMQ and Zipkin: add Zipkin Client and Spring RabbitMQ Support dependencies
 3. Run the Zinkin server by CLI
@@ -218,44 +218,51 @@
 
 ## Other Cloud Components
 ### OpenFeign
+For Microservices which invoke other Microservice's API 
 1. Add OpenFeign dependency
-2. Enable OpenFeign with __*@EnableFeignClients*__  
-[[CurrencyConverterMicroserviceApplication]()]
-3. Create a Proxy interface for the Microservice from which need to invoke REST API
-   - __*@FeignClient*__  with name and url {if connect to a single instance} of the Microservice
+2. Enable OpenFeign with __*@EnableFeignClients*__ 
+[[CurrencyConverterMicroserviceApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/CurrencyConverterMicroserviceApplication.java)]
+3. Create a Proxy interface 
+[[CurrencyExchangeServiceProxy](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/proxy/CurrencyExchangeServiceProxy.java)]
+   - __*@FeignClient*__  with *```name```* of the Microservice
+   - Declare *```url```* if connect to a single instance. Use [Ribbon](#ribbon) if connect to many instances.
    - Declare method map to the desired API
-4. Inject the Proxy into the Rest Controller with __*@Autowired*__ 
-[[CurrencyConversionRestController]()]
+4. Inject the Proxy into the Rest Controller with __*@Autowired*__ then invoke Proxy method in the services  
+[[CurrencyConversionRestController](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/controller/CurrencyConversionRestController.java)]
 
 ### Ribbon
+For Microservices which invoke other Microservice's (target) API 
 1. Add Ribbon dependency
-2. Enable Ribbon with __*@RibbonClient*__ in the Proxy  
-[[CurrencyExchangeServiceProxy]()]
-3. Configure URLs of multiple instances in {prefer alternative: Name Server}
-[application.properties]()
+2. Declare the Microservice target with __*@RibbonClient*__ in the Proxy  
+[[CurrencyExchangeServiceProxy](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/proxy/CurrencyExchangeServiceProxy.java)]
+3. Configure URLs of multiple instances of the Microservice target in 
+[application.properties](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/resources/application.properties) 
+{prefer alternative: [Name Server](#eureka-name-server}
 
 ### Spring Cloud Sleuth
 1. Add Sleuth dependency
-2. Create Sample Bean (brave.sampler) 
-[[ZuulApiGatewayServerApplication]()] 
-[[CurrencyConverterMicroserviceApplication]()] 
-[[CurrencyExchangeMicroserviceApplication]()] 
+2. Create Sample Bean (brave.sampler) in the application (which owns services needed to trace) 
+[[ZuulApiGatewayServerApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/zuul-api-gateway-server/src/main/java/com/cpulover/microservices/ZuulApiGatewayServerApplication.java)] 
+[[CurrencyConverterMicroserviceApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/CurrencyConverterMicroserviceApplication.java)] 
+[[CurrencyExchangeMicroserviceApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-exchange-microservice/src/main/java/com/cpulover/microservices/CurrencyExchangeMicroserviceApplication.java)] 
    
 ### Spring Cloud Bus
+For Microservices which are configured externally by the Config Server
 1. Ensure RabbitMQ Server is running
-2. Spring Config Client and Spring Cloud Starter Bus AMQP dependencies for Config Server and Config Clients (Microservices)
-3. Enable Actuator endpoints in 
-[application.properties]()
-3. For updating the changes from Config Git Repo
+2. Actuator, Spring Config Client and Spring Cloud Starter Bus AMQP dependencies for Config Clients (Microservices)
+3. Spring Cloud Starter Bus AMQP dependency for Config Server
+4. Enable Actuator endpoints for Config Clients in 
+[application.properties](https://github.com/cpulover-practice/spring-cloud/blob/master/limits-microservice/src/main/resources/bootstrap.properties)
+5. For updating the changes from Config Git Repo
    - Commit the Git Repo
    - ```POST localhost:<microservice_port>/actuator/bus-refresh``` (if there are many instances of a Microservices on different ports, choose any port)
 
 ### Hystrix
 1. Add Hystrix dependency
 2. Enable Hystrix with __*@EnableHystrix*__ 
-[[LimitsMicroserviceApplication]()]
+[[LimitsMicroserviceApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/limits-microservice/src/main/java/com/example/microservices/LimitsMicroserviceApplication.java)]
 3. Update the Rest Controller 
-[[LimitConfigRestController]()]
+[[LimitConfigRestController](https://github.com/cpulover-practice/spring-cloud/blob/master/limits-microservice/src/main/java/com/example/microservices/controller/LimitConfigRestController.java)]
    - Specify a fallback method for an endpoint with __*@HystrixCommand*__ 
    - Define the fallback method
 
