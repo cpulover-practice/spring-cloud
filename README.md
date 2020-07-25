@@ -159,8 +159,8 @@
 [[CurrencyConverterMicroserviceApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/CurrencyConverterMicroserviceApplication.java)] 
 [[CurrencyExchangeMicroserviceApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-exchange-microservice/src/main/java/com/cpulover/microservices/CurrencyExchangeMicroserviceApplication.java)]
       - Declare Eureka Server URL in 
-[application.properties](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/resources/application.properties)] 
-[application.properties](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-exchange-microservice/src/main/resources/application.properties)]
+[[application.properties](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/resources/application.properties)] 
+[[application.properties](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-exchange-microservice/src/main/resources/application.properties)]
    2. Test the connection
       - Run the Eureka Server
       - Run all Microservices
