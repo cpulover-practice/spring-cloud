@@ -66,9 +66,9 @@
 2. Setup Database 
    1. Populate data 
 [[data.sql](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-exchange-microservice/src/main/resources/data.sql)]
-   - Create Entity for service response
+   2. Create Entity for service response
 [[ExchangeValue](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-exchange-microservice/src/main/java/com/cpulover/microservices/entity/ExchangeValue.java)]
-   - Create JPA repository for the Entity
+   3. Create JPA repository for the Entity
 [[ExchangeValueRepository](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-exchange-microservice/src/main/java/com/cpulover/microservices/repository/ExchangeValueRepository.java)]
 3. Create services to CRUD Entity contents
 [[CurrencyExchangeMicroserviceRestController](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-exchange-microservice/src/main/java/com/cpulover/microservices/controller/CurrencyExchangeRestController.java)]
@@ -299,7 +299,7 @@ For Microservices which are configured externally by the Config Server
 [[pom.xml]()]
 - [Spring Cloud] Order of application execution: Name Server -> Zipkin Server (CLI) -> Microservices -> Zuul API Gateway Server
 - [RabbitMQ] RabbitMQ Server runs as a service on background in Windows
-
+- [H2] Use ```' '``` instead of ```" "``` in the script
 
 
 
