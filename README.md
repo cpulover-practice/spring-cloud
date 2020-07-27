@@ -144,17 +144,19 @@
    1. Spring Boot dependencies:
       - Eureka Server
       - Spring Config Client
-      - Assistant dependencies: Spring Boot DevTools, Actuator, Lombok
+      - Assistant dependencies: Spring Boot DevTools, Actuator
    2. Configuration 
-      1. Activate Server configuration with __*@EnableEurekaServer*__ 
+      1. Enable the service registry with __*@EnableEurekaServer*__ 
 [[EurekaNameServerApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/eureka-name-server/src/main/java/com/cpulover/microservices/EurekaNameServerApplication.java)]
       2. Configure in 
 [application.properties](https://github.com/cpulover-practice/spring-cloud/blob/master/eureka-name-server/src/main/resources/application.properties)
          - Application name  
          - Port (typically 8761)
+         - Prevent the registry (server) from registering itself (since use only one instance of Name Server): ```eureka.client.register-with-eureka=false```
+and ```eureka.client.fetch-registry=false```
 2. Connect Eureka Server to Microservices
    1. Configure Microservices
-      - Add Eureka Discovery Client dependency
+      - Add Eureka Discovery Client dependency (```spring-cloud.version``` in <dependencyManagement> and <properties>)
       - Register to the Server with __*@EnableDiscoveryClient*__ 
 [[CurrencyConverterMicroserviceApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/CurrencyConverterMicroserviceApplication.java)] 
 [[CurrencyExchangeMicroserviceApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-exchange-microservice/src/main/java/com/cpulover/microservices/CurrencyExchangeMicroserviceApplication.java)]
@@ -273,7 +275,7 @@ For Microservices which are configured externally by the Config Server
   - Option 1: Restart the Microservices (or Config Server???) 
   - Option 2: Use Actuator endpoint for each Microservice (or instance): ```POST localhost:<microservice_port>/actuator/refresh```
   - Option 3: Use Spring Cloud Bus endpoint for all Microservices (or instances): ```POST localhost:<microservice_port>/actuator/bus-refresh``` (prefer for a large number of Microservices or instances)
-- [Spring] ```bootstrap.properties``` used for Spring Cloud has higher priority than ```application.properties``` used in Spring Boot
+- [Spring] ```bootstrap.properties``` used for Spring Cloud has higher priority than (found before by Spring) ```application.properties``` used in Spring Boot
 - [Spring Core] Inject properties for Microservices:
   1. Declare application properties (for injection instead of hard-coding)  
 [[application.properties]()]
