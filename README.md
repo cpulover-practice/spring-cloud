@@ -224,10 +224,10 @@ For Microservices which invoke other Microservice's API
 1. Add OpenFeign dependency
 2. Enable OpenFeign with __*@EnableFeignClients*__ 
 [[CurrencyConverterMicroserviceApplication](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/CurrencyConverterMicroserviceApplication.java)]
-3. Create a Proxy interface 
+3. Create a Proxy interface (to declare invoked API of the target Microservice) 
 [[CurrencyExchangeServiceProxy](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/proxy/CurrencyExchangeServiceProxy.java)]
-   - __*@FeignClient*__  with *```name```* of the Microservice
-   - Declare *```url```* if connect to a single instance. Use [Ribbon](#ribbon) if connect to many instances.
+   - __*@FeignClient*__  with *```name```* of the target Microservice
+   - {Declare *```url```* if connect to a single instance. Use [Ribbon](#ribbon) if connect to many instances}
    - Declare method map to the desired API
 4. Inject the Proxy into the Rest Controller with __*@Autowired*__ then invoke Proxy method in the services  
 [[CurrencyConversionRestController](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/controller/CurrencyConversionRestController.java)]
