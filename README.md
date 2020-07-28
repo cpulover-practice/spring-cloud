@@ -233,13 +233,13 @@ For Microservices which invoke other Microservice's API
 [[CurrencyConversionRestController](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/controller/CurrencyConversionRestController.java)]
 
 ### Ribbon
+{Prefer alternative: [OpenFeigh](#openfeign)}
 For Microservices which invoke other Microservice's (target) API 
 1. Add Ribbon dependency
 2. Declare the Microservice target with __*@RibbonClient*__ in the Proxy  
 [[CurrencyExchangeServiceProxy](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/proxy/CurrencyExchangeServiceProxy.java)]
 3. Configure URLs of multiple instances of the Microservice target in 
 [application.properties](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/resources/application.properties) 
-{prefer alternative: [Name Server](#eureka-name-server}
 
 ### Spring Cloud Sleuth
 1. Add Sleuth dependency
@@ -302,7 +302,7 @@ For Microservices which are configured externally by the Config Server
 - [Spring Cloud] Order of application execution: Name Server -> Zipkin Server (CLI) -> Microservices -> Zuul API Gateway Server
 - [RabbitMQ] RabbitMQ Server runs as a service on background in Windows
 - [H2] Use ```' '``` instead of ```" "``` in the script
-
+- [Spring Cloud] Spring Cloud OpenFeign uses Ribbon as its default load balancer
 
 
 
