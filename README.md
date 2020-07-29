@@ -22,9 +22,9 @@
 - Eureka Server
 - Eureka Discovery Client: connect to Euraka Name Server for loading balancing
 - Zuul
-- Spring RabbitMQ Support: support a message queue supporting for Zipkin Distributed Tracing Server
-- Sleuth: distributed tracing via logs with Spring Cloud Sleuth
+- Spring RabbitMQ Support: support a message queue supporting for Zipkin Distributed Tracing Server 
 [[URL](https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit)]   
+- Sleuth: distributed tracing via logs with Spring Cloud Sleuth
 - Spring Cloud Starter Bus AMQP: for Spring Cloud Bus 
 [[URL](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp)]
 - Hystrix
@@ -214,7 +214,7 @@ and ```eureka.client.fetch-registry=false```
 
 2. Connect Microservices to RabbitMQ and Zipkin: add Zipkin Client and Spring RabbitMQ Support dependencies
 3. Run the Zinkin server by CLI
-   - ```set RABBIT_URI=amqp://localhost```: connect Zipkin to RabbitMQ Server
+   - {```set RABBIT_URI=amqp://localhost```: connect Zipkin to RabbitMQ Server}
    - ```java -jar <zipkin_jar_file_name>```
 4. Access Zinkin UI via URL: ```http://localhost:9411/zipkin```
 
@@ -233,7 +233,7 @@ For Microservices which invoke other Microservice's API
 [[CurrencyConversionRestController](https://github.com/cpulover-practice/spring-cloud/blob/master/currency-converter-microservice/src/main/java/com/cpulover/microservices/controller/CurrencyConversionRestController.java)]
 
 ### Ribbon
-{Prefer alternative: [OpenFeigh](#openfeign)}
+{Prefer alternative: [OpenFeign](#openfeign)}
 For Microservices which invoke other Microservice's (target) API 
 1. Add Ribbon dependency
 2. Declare the Microservice target with __*@RibbonClient*__ in the Proxy  
