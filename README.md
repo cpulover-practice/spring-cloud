@@ -1,19 +1,19 @@
 # Overview
 ### Microservices
-[__*Currency Converter Microservice*__](#currency-converter-microservice) provides REST service converting a currency into another currency. It invokes services from [__*Currency Exchange Microservice*__](#currency-exchange-microservice) and [__*Limits Microservice*__](#limits-microservice) to retrieve respectively the exchange rate and the limit amount (minimum and maximum) for each exchange.  
+[__*Currency Converter Microservice*__](#currency-converter-microservice) provides REST API to convert a currency into another currency. It invokes API from [__*Currency Exchange Microservice*__](#currency-exchange-microservice) and [__*Limits Microservice*__](#limits-microservice) to retrieve respectively the exchange rate and the limit amount (minimum and maximum) for each exchange.  
   
 ### Cloud Servers
-- [__*Spring Cloud Config Server:*__](#spring-cloud-config-server) contains configurations of all the Microservice. It connects to a Config Git Repository as a storage.
-- [__*Eureka Name Server:*__](#eureka-name-server) registers and manages all the instances of Microservice
+- [__*Spring Cloud Config Server:*__](#spring-cloud-config-server) contains configurations of all Microservices. It connects to a Config Git Repository as a storage.
+- [__*Eureka Name Server:*__](#eureka-name-server) registers and manages all the instances of Microservices
 - [__*Zuul API Gateway Server:*__](#zuul-api-gateway-server) used for logging all the requests made between Microservices
-- [__*Zipkin Distributed Tracing Server:*__](#zipkin-distributed-tracing-server) stores all tracing requests (by Sleuth) in one place
+- [__*Zipkin Distributed Tracing Server:*__](#zipkin-distributed-tracing-server) stores all traced requests (by Sleuth) in one place
 
 ### Other Cloud components
-- [__*OpenFeign:*__](#openfeign) leverages invoking REST API from other Microservices
-- [__*Ribbon:*__](#ribbon) client-side load-balancing, used for the Microservices which invoking API from mulitple instances of other Microservice
+- [__*OpenFeign:*__](#openfeign) leverages invoking REST APIs from other Microservices
+- [__*Ribbon:*__](#ribbon) client-side load-balancing, used for the Microservices which invoking API from mulitple instances of other Microservices
 - [__*Spring Cloud Sleuth:*__](#spring-cloud-sleuth) adds a unique ID to a request to trace it across multiple Microservices
 - [__*Spring Cloud Bus:*__](#spring-cloud-bus) updates (broadcasts) changes from the Config Git Repo of the Spring Cloud Config Server to multiple Microservices at the same time
-- [__*Hystrix:*__](#hystrix) provides fault tolerance (return a default response when the Microservice is not available)
+- [__*Hystrix:*__](#hystrix) provides fault tolerance (return a default response when the Microservice is unavailable)
 
 ### Dependencies
 - Spring Config Client/Server
@@ -28,8 +28,6 @@
 - Spring Cloud Starter Bus AMQP: for Spring Cloud Bus 
 [[URL](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp)]
 - Hystrix
-
----
 
 # Development Process
 
@@ -136,7 +134,7 @@
    2. Test the connection between Config Server and Microservice
       1. Run Java application for the Config Server
       2. Run Java application for the Microservices
-      3. Access Microservice endpoints which exposes the property values
+      3. Access Microservice endpoints which expose the property values
       
 ### [Eureka Name Server](https://github.com/cpulover-practice/spring-cloud/tree/master/eureka-name-server)
 1. Setup Server 
@@ -267,8 +265,6 @@ For Microservices which are configured externally by the Config Server
 [[LimitConfigRestController](https://github.com/cpulover-practice/spring-cloud/blob/master/limits-microservice/src/main/java/com/example/microservices/controller/LimitConfigRestController.java)]
    - Specify a fallback method for an endpoint with __*@HystrixCommand*__ 
    - Define the fallback method
-
----
 
 # Notes - Tips
 - [Spring Cloud] For every change in the Config Git Repo, to apply the change on Microservices, need to commit the Git Repo and: 
